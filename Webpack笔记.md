@@ -1,4 +1,42 @@
-## 学习Webpck过程中的一些知识点
+#### 学习Webpck过程中的一些知识点
+
+- npm初始化可以使用 npm init -y 
+> -y 的作用的是初始化选项全部使用默认值，省事
+
+- 在终端输入 which node 可以查看node的安装路径
+
+- 文件监听，有两种方式
+> - 启动 webpack 命令时，带上 --warch 参数 （但需要手动刷新浏览器）
+> - 在配置 wbepack.config.js 中设置 watch: true
+
+- 热更新： webpack-dev-server
+> 使用 HotModuleReplacementPlugin 插件
+
+- 热更新2: webpack-dev-middleware
+```js
+    const express = require('express');
+    const webpack = require('webpack');
+    const webpackDevMiddleware = require('webapck-dev-middleware');
+
+    const app = express();
+    const config = require('./webpack.config.js');
+    const compiler = webpack(config);
+
+    app.use(webpackDevMiddleware(compiler, {
+        publicPath: config.output.publicPath
+    }));
+
+    app.listen(3000, () => {
+        console.log('app listening on port 3000!\n');
+    })
+```
+- 文件指纹生成
+> - Hash：和整个项目的构建相关，只要项目文件有修改，整个项目构建的 hash 值就会更改
+> - Chunkhash：和 webpack 打包的 chunk 有关，不同的 entry 会生成不同的 chunkhash 值
+> - Contenthash：根据文件内容来定义 hash，文件内容不变，则 contenthash 不变
+
+- CSS 的文件指纹设置
+> 设置 MiniCssExtractPlugin 的 filename，使用 [contenthash]
 
 - clean-webpack-plugin 可以在构建前，删除output指定输出目录  
  
@@ -120,6 +158,25 @@
     }
 ```
 
+- tree shaking
+> mode 值为 production 自动开启 tree-shaking，设置为 none 可以取消 tree-shaking
+> DCE(Elimination)
+>> - 代码不会被执行
+>> - 代码执行的结果不会被用到
+>> - 代码只会影响死变量（只写不读）
+
+> 只支持ES6模块，不支持cjs
+原理
+> 利用ES6模块的特点
+>> - 只能作为模块顶层的语句出现
+>> - import 的模块名只能是字符串常量
+>> - import biding 是 immutable的
+> 代码擦除：uglify 阶段删除无用代码
+
+- scope hoisting （必须是ES6代码，cjs不支持）
+> 原理：将所有模块的代码按照引用顺序放在一个函数作用域里，然后适当地重命名一些变量以防止变量名冲突
+> 通过 scope hoisting 可以减少函数声明代码和内存开销
+
 - Webpack4 动态按需加载JS文件，动态import  
 > - 安装babel插件  
 >> npm install @babel/plugin-syntax-dynamic-import --save-dev  
@@ -149,3 +206,12 @@
 
 - 一个构建输出日志的插件 friendly-errors-webpack-plugin
 > 可以输出比较友好直观的构建信息，推荐使用
+
+- webpack配置文件中可以设置 stats 属性来控制输出信息的类型，可以结合 'friendly-errors-webpack-plugin' 插件来优化输出信息的格式和内容
+
+- 团队对于构建配置的选择
+> 通过多个配置文件管理不同环境的webpack配置
+>> 基础配置：webpack.base.js 
+>> 开发环境：webpack.dev.js
+>> 生产环境：webpack.prod.js
+>> SSR环境：webpack.ssr.js
