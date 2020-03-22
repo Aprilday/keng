@@ -215,3 +215,46 @@
 >> 开发环境：webpack.dev.js
 >> 生产环境：webpack.prod.js
 >> SSR环境：webpack.ssr.js
+
+- 发布包到 npm
+> 添加用户
+>> npm adduser
+> 升级版本
+>> 升级补丁版本号：npm version patch
+>> 升级小版本号：npm version minor
+>> 升级大版本号： npm version major
+> 发布版本
+>> npm publish
+
+- webpack 构建速度分析：使用 speed-measure-webpack-plugin
+```js
+    const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+    cosnt smp = new SpeedMeasurePlugin();
+
+    const webpackConfig = smp.wrap({
+        plugins: [
+            new MyPlugins(),
+        ]
+    })
+```
+- webpack 构建体积分析：webpack-bundle-analyzer
+```js
+    // 构建完成后在本地 8888 端口展示信息
+    const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+    module.exports = {
+        plugins: [
+            new BundleAnalyzerPlugin(),
+        ]
+    }
+```
+
+- 多进程/多实例构建：资源并行解析可选方案
+> thread-loader
+>> parallel-webpack
+>> HappyPack
+
+- 多进程/多实例：并行压缩
+> 方法一、使用 parallel-uglify-plugin 插件
+> 方法二、uglifyjs-webpack-plugin 开启 parallel 参数
+
+- 使用 DLLPlugin 进行分包
