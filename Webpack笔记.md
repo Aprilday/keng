@@ -258,3 +258,14 @@
 > 方法二、uglifyjs-webpack-plugin 开启 parallel 参数
 
 - 使用 DLLPlugin 进行分包
+
+- 擦除没有用到的css属性
+> 使用 purge-css-plugin
+
+- 图片压缩
+> 基于 Node 库的 imagemin 或者 tinypng API
+> 配置 image-webpack-loadersimage-webpack-loaders
+
+- 动态 Polyfill
+> 使用 Polyfill service
+> polyfill.io官方提供的服务
