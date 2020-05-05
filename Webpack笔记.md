@@ -269,3 +269,14 @@
 - 动态 Polyfill
 > 使用 Polyfill service
 > polyfill.io官方提供的服务
+
+- loader
+> loader只是导出为函数的JavaScript模块
+
+```js
+    module.exports = function(source) {
+        return source;
+    }
+```
+
+> 多个loader串行执行，顺序从后到前
